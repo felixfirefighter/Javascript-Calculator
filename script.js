@@ -6,13 +6,34 @@ function isTooLong() {
     return $("#current-input").text().length >= 17;
 }
 
+function isOperation(){
+    var result;
+
+    //check last character is an operation
+    //if no argument is passed in, it means we want to check the last character of the string
+    if(arguments.length === 0) {
+        var currentInput = $("#current-input");
+        result = currentInput.text().charAt(currentInput.text().length - 1);
+    }else{
+        result = arguments[0];
+    }
+    
+    return result == "+" || result == "-" || result == "x" || result == "/" || result == "%";
+}
+
 function appendInput(value){
+        var currentInput = $("#current-input");
+
         if(isTooLong()){
-            $("#current-input").text("");
+            currentInput.text("");
             $("#result").text("Max Digit Input!");
         }else{
-            $("#current-input").append(value);
-            $("#result").text("");
+            if(isOperation() && (isOperation(value))){
+                var text = currentInput.text().slice(0,-1) + value;
+                currentInput.text(text);
+            }else{
+                currentInput.append(value);
+            }
         }
 }
 
