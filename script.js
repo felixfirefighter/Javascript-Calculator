@@ -2,45 +2,78 @@
  * Created by LEE on 2016/10/18.
  */
 
+var yoongTiGlobal = {
+    decimalAdded: false,
+    clear: false,
+    firstDigit: false
+};
+
 function isTooLong() {
     return $("#current-input").text().length >= 17;
 }
 
-function isOperation(){
+function isOperation() {
     var result;
 
     //check last character is an operation
     //if no argument is passed in, it means we want to check the last character of the string
-    if(arguments.length === 0) {
+    if (arguments.length === 0) {
         var currentInput = $("#current-input");
         result = currentInput.text().charAt(currentInput.text().length - 1);
-    }else{
+    } else {
         result = arguments[0];
     }
-    
-    return result == "+" || result == "-" || result == "x" || result == "/" || result == "%";
+
+    return result == "+" || result == "-" || result == "x" || result == "/";
 }
 
-function appendInput(value){
-        var currentInput = $("#current-input");
+function appendInput(value) {
 
-        if(isTooLong()){
-            currentInput.text("");
-            $("#result").text("Max Digit Input!");
-        }else{
-            if(isOperation() && (isOperation(value))){
-                var text = currentInput.text().slice(0,-1) + value;
-                currentInput.text(text);
+    var currentInput = $("#current-input");
+
+    if(yoongTiGlobal.clear){
+        currentInput.text("");
+        yoongTiGlobal.clear = false;
+    }
+
+    if (isTooLong()) {
+        currentInput.text("Max Digit Input!");
+        yoongTiGlobal.clear = true;
+    } else {
+        if (isOperation() && (isOperation(value))) {
+            var text = currentInput.text().slice(0, -1) + value;
+            currentInput.text(text);
+        } else {
+            if(isOperation(value)){
+                yoongTiGlobal.decimalAdded = false;
+
+                //the next input will be the first digit
+                yoongTiGlobal.firstDigit = true;
+            }
+
+            if(value == "."){
+                if(!yoongTiGlobal.decimalAdded){
+                    currentInput.append(value);
+                }
+                yoongTiGlobal.decimalAdded = true;
             }else{
                 currentInput.append(value);
             }
         }
+    }
 }
 
-function addOperation(value){
-    appendInput(value);
-}
+function evalResult(currentInput, value) {
+    if (isOperation()) {
+        value = currentInput.text().slice(0, -1);
+    }else{
+        value = currentInput.text();
+    }
 
+    value = value.replace(/x/g, '*');
+
+    return eval(value);
+}
 $(document).ready(function () {
     var currentInput = $("#current-input");
 
@@ -49,7 +82,7 @@ $(document).ready(function () {
     });
 
     $("#delete").click(function () {
-        currentInput.text(currentInput.text().slice(0,-1));
+        currentInput.text(currentInput.text().slice(0, -1));
     });
 
     $("#zero").click(function () {
@@ -98,24 +131,28 @@ $(document).ready(function () {
         appendInput(".");
     });
 
+    $("#percent").click(function () {
+        appendInput("%");
+    });
+
     $("#plus").click(function () {
-        addOperation("+");
+        appendInput("+");
     });
 
     $("#minus").click(function () {
-        addOperation("-");
+        appendInput("-");
     });
 
     $("#divide").click(function () {
-        addOperation("/");
-    });
-
-    $("#percent").click(function () {
-        addOperation("%");
+        appendInput("/");
     });
 
     $("#multiply").click(function () {
         appendInput("x");
     });
 
+    $("#equal").click(function () {
+        var result = evalResult(currentInput);
+        currentInput.text(result);
+    });
 });
