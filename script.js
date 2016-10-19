@@ -3,7 +3,7 @@
  */
 
 function isTooLong() {
-    return $("#current-input").text().length > 17;
+    return $("#current-input").text().length >= 17;
 }
 
 function appendInput(value){
@@ -14,70 +14,87 @@ function appendInput(value){
             $("#current-input").append(value);
             $("#result").text("");
         }
+}
 
+function addOperation(value){
+    appendInput(value);
 }
 
 $(document).ready(function () {
+    var currentInput = $("#current-input");
+
+    $("#clear").click(function () {
+        currentInput.text("");
+    });
+
+    $("#delete").click(function () {
+        currentInput.text(currentInput.text().slice(0,-1));
+    });
+
+    $("#zero").click(function () {
+        appendInput("0");
+    });
+
+    $("#double-zero").click(function () {
+        appendInput("00");
+    });
+
     $("#one").click(function () {
-       appendInput("1");
+        appendInput("1");
     });
 
     $("#two").click(function () {
-        appendInput("1");
+        appendInput("2");
     });
 
     $("#three").click(function () {
-        appendInput("1");
+        appendInput("3");
     });
 
     $("#four").click(function () {
-        appendInput("1");
+        appendInput("4");
     });
     $("#five").click(function () {
-        appendInput("1");
+        appendInput("5");
     });
 
     $("#six").click(function () {
-        appendInput("1");
+        appendInput("6");
     });
 
     $("#seven").click(function () {
-        appendInput("1");
+        appendInput("7");
     });
 
     $("#eight").click(function () {
-        appendInput("1");
+        appendInput("8");
     });
     $("#nine").click(function () {
-        appendInput("1");
+        appendInput("9");
     });
 
     $("#dot").click(function () {
-        appendInput("1");
+        appendInput(".");
     });
 
     $("#plus").click(function () {
-        appendInput("1");
+        addOperation("+");
     });
 
     $("#minus").click(function () {
-        appendInput("1");
+        addOperation("-");
     });
 
     $("#divide").click(function () {
-        appendInput("1");
+        addOperation("/");
     });
 
-    $("#").click(function () {
-        appendInput("1");
+    $("#percent").click(function () {
+        addOperation("%");
     });
 
-    $("#one").click(function () {
-        appendInput("1");
-    });
-
-    $("#one").click(function () {
-        appendInput("1");
+    $("#multiply").click(function () {
+        appendInput("x");
     });
 
 });
